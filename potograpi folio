@@ -1,0 +1,302 @@
+code course menu.html :
+<!DOCTYPE html>
+<html>
+<head>
+	<title>menu.html</title>																												 	<style >
+		*{
+	margin: 0px;										
+	padding: 0px;
+	font-family: century gothic;
+}
+header{
+ background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url("o.jpg");
+ height: 100vh;
+ background-size: cover;
+ background-position: center;
+
+}
+ul{
+	list-style-type: none;
+	float: right;
+	margin-top: 20px;
+
+
+}
+ul li{
+	display: inline-block;
+}
+ul li a{
+	text-decoration: none;
+	color: white;
+	padding: 5px 20px;
+	border: 1px solid transparent;
+
+}
+ul li a:hover{
+	background-color: white;
+	color: black;
+
+}
+ul li.active a{
+	background-color: white;
+	color: black;
+
+}
+.main{
+	max-width: 1200px;
+	margin: auto;
+
+}
+.title{
+	position: absolute;
+	top: 50%;
+	left: 35%;
+	transform: translate(-50%,-50%);
+
+}
+.title h1{
+	color: white;
+	font-size: 60px;
+	text-decoration: underline;
+
+}
+.button{
+	position: absolute;
+	top:  60%
+	left: 50%
+	color: white;
+	transform: translate(-50%,-50%);
+}
+.btn{
+	border: 1px solid white;
+	padding: 10px 20px;
+	color: white;
+	text-decoration: 
+}
+	</style>				
+</head>
+<body>
+	<header>
+		<div class="main">
+			<ul>
+				<head>
+				<li><a href="#" class="active">Beranda</a></li>		
+				<link rel="stylesheet" type="text/css" href="menu.html">
+				</head>
+				<li><a href="karya.html">karya</a></li>	
+				<li><a href="upload.php">upload  gambar</a></li>
+				<li><a href="menu.html">keluar</a></li>
+					
+			</ul>
+		</div>
+		<div class="title">
+			<h1>SELAMAT DATANG DIGALERI SAYA</h1>	
+		
+		</div>
+	</header>
+</body>
+</html>
+
+code course karya.html :
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Belajar CSS</title>
+<style>
+   img {
+     width: 300px;
+     height: 200px;
+     border: 4px solid #575D63;
+     padding: 10px;
+   }
+</style>
+</head>
+<body>
+  <img src="a.jpg"><img src="dd.jpg">
+  <img src="jj.jpg"><img src="ll.jpg">
+  <img src="hh.jpg"><img src="n.jpg">
+  <img src="mm.jpg"><img src="cc.jpg">
+  <img src="o.jpg"><img src="v.jpg">
+  <img src="k.jpg"><img src="z.jpg">
+</body>
+</html>
+
+code course koneksi.php :
+<?php 
+$host       = "localhost";
+$user       = "root";
+$password   = "";
+$database   = "db_upload_blob";
+$koneksi    = mysqli_connect($host, $user, $password, $database);
+?>
+
+code course upload.php :
+<?php 
+include('koneksi.php');
+if(isset($_POST['tombol']))
+{
+    $temp = $_FILES['gambar']['tmp_name'];
+    $name = rand(0,9999).$_FILES['gambar']['name'];
+    $size = $_FILES['gambar']['size'];
+    $type = $_FILES['gambar']['type'];
+    $keterangan = $_POST['keterangan'];
+    $folder = "files/";
+    if ($size < 2048000 and ($type =='image/jpeg' or $type == 'image/png')) {
+        move_uploaded_file($temp, $folder . $name);
+        mysqli_query($koneksi, "insert into tb_gambar (gambar,keterangan,tipe_gambar,ukuran_gambar) values ('$name','$keterangan','$type','$size')");
+        header('location:index.php');
+    }else{
+        echo "<b>Gagal Upload File</b>";
+    }
+}
+?>
+<html>
+    <head>
+        <title></title>
+        <style >
+                    *{
+    margin: 0px;                                        
+    padding: 0px;
+    font-family: century gothic;
+}
+header{
+ background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url("o.jpg");
+ height: 100vh;
+ left: 60%;
+ background-size: cover;
+ background-position: center;
+
+}table{
+    color: white;
+    position: absolute;
+    top: 55%;
+    left: 46%;
+    font-size: 30px;
+    transform: translate(-50%,-50%);
+}
+        </style>
+    </head>
+    <body>
+        <header>
+        <form method="post" action="" enctype="multipart/form-data">
+        <table>
+            <tr>
+                <td>Gambar</td>
+                <td><input type="file" name="gambar"/></td>
+            </tr>
+            <tr>
+                <td>Keterangan</td>
+                <td><textarea name="keterangan"></textarea></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" name="tombol"/></td>
+            </tr>
+        </table>
+        </form>
+        </header>
+    </body>
+</html>
+
+code course image.php :
+
+<?php
+include('koneksi.php');
+if(isset($_GET['id_gambar'])) 
+{
+    $query = mysqli_query($koneksi,"select * from tb_gambar where id_gambar='".$_GET['id_gambar']."'");
+    $row = mysqli_fetch_array($query);
+    header("Content-type: " . $row["tipe_gambar"]);
+    echo $row["gambar"];
+}
+else
+{
+    header('location:index.php');
+}
+?>
+
+cose course index.php :
+<?php
+include('koneksi.php');
+$query = mysqli_query($koneksi,"SELECT * FROM tb_gambar");
+?>
+<html>
+    <head>
+        <title></title>
+         <style >
+                    *{
+    margin: 0px;                                        
+    padding: 0px;
+    font-family: century gothic;
+}
+header{
+ background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url("jj.jpg");
+ height: 100vh;
+ left: 60%;
+ background-size: cover;
+ background-position: center;
+}head{
+    color: white;
+    position: absolute;
+    top: 15%;
+    left: 46%;
+    font-size: 30px;
+    
+}
+table{
+    color: white;
+    position: absolute;
+    top: 55%;
+    left: 46%;
+    font-size: 20px;
+    transform: translate(-50%,-50%);
+}
+        </style>
+    </head>
+    <header>
+    <body>
+       <head>
+        <a href="upload.php">Upload Gambar</a>
+    </head>
+        <table border="1">
+            <tr>
+                <th>No</th>
+                <th>Gambar</th>
+                <th>Keterangan</th>
+                <th>Tipe</th>
+                <th>Ukuran</th>
+                <th>Action</th>
+            </tr>
+            <?php 
+            $no = 1;
+            while($row = mysqli_fetch_array($query))
+            {
+                ?>
+                <tr>
+                    <td><?php echo $no++; ?></td>
+                    <td><img src="image.php?id_gambar=<?php echo $row['id_gambar']; ?>" width="100"/></td>
+                    <td><?php echo $row['keterangan']; ?></td>
+                    <td><?php echo $row['tipe_gambar']; ?></td>
+                    <td><?php echo $row['ukuran_gambar']; ?></td>
+                    <td><a href="delete.php?id_gambar=<?php echo $row['id_gambar']; ?>">Delete</a></td>
+                </tr>
+                <?php
+            }
+            ?>
+        </table>
+    
+    </body>
+</header>
+</html>
+
+code course delete.php :
+<?php
+if(isset($_GET['id_gambar']))
+{
+    include('koneksi.php');
+    $id_gambar = $_GET['id_gambar'];
+    $query = mysqli_query($koneksi,"delete from tb_gambar where id_gambar='$id_gambar'");
+}
+header('location:index.php');
+?>
